@@ -1,5 +1,5 @@
 # injectionProfileGenerator
-Injection Profile was caculated by Leilei model  email:xflyhigh@qq.com
+Injection Profile was caculated by the empirical model.  Email:xflyhigh@qq.com
 Thanks for the help of Yan Zhang. His blog:  https://openfoam.top/
 ------------Related articles----------------
 Xu L, Bai X S, Jia M, et al. Experimental and modeling study of liquid fuel injection and combustion in diesel engines with a common rail injection system[J]. Applied Energy, 2018, 230: 287-304.
