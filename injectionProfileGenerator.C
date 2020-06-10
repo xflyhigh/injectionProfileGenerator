@@ -47,10 +47,18 @@ int main(int argc, char *argv[])
 	OFstream injectionOutPut_dummy("constant/injetionParameter/flowRateProfile");
 	OFstream durationOutPut_dummy("constant/injetionParameter/duration");    
     OFstream injVelocityOutPutOutPut_dummy("constant/injetionParameter/velocity");   
-    OFstream injDischargeOutPutOutPut_dummy("constant/injetionParameter/discd"); 	
-	durationOutPut_dummy<<"10;"<<endl;	
-	injVelocityOutPutOutPut_dummy<<"1.0;"<<endl;
-    injDischargeOutPutOutPut_dummy<<"0.8;"<<endl;	
+    OFstream injDischargeOutPutOutPut_dummy("constant/injetionParameter/discd"); 
+    OFstream parcelsPerSecondOutPutOutPut_dummy("constant/injetionParameter/parcelsPerSecond"); 
+    OFstream sizeDistributionMinOutPutOutPut_dummy("constant/injetionParameter/minValue"); 
+    OFstream sizeDistributionMaxOutPutOutPut_dummy("constant/injetionParameter/maxValue");
+	OFstream sizeDistributionMeanOutPutOutPut_dummy("constant/injetionParameter/meanValue");
+	durationOutPut_dummy<<"0.2;"<<endl;
+	parcelsPerSecondOutPutOutPut_dummy<<"1.0e+08;"<<endl;
+	sizeDistributionMeanOutPutOutPut_dummy<<"0.00015;"<<endl;
+    sizeDistributionMaxOutPutOutPut_dummy<<"0.00015;"<<endl;
+    sizeDistributionMinOutPutOutPut_dummy<<"0.000015;"<<endl;
+	injVelocityOutPutOutPut_dummy<<"100.0;"<<endl;
+    injDischargeOutPutOutPut_dummy<<"0.1;"<<endl;	
 	injectionOutPut_dummy<<"table"<<endl;
 	injectionOutPut_dummy<<"("<<endl;
 	injectionOutPut_dummy<<"(0 1)"<<endl;
@@ -100,7 +108,7 @@ IOdictionary sprayCloudProperties
 
     Info<<"rho_fuel ==="<<rho_fuel<<endl;        
     
-    scalar numnoz = parcels.injectors().size();
+    //scalar numnoz = parcels.injectors().size();
     scalar dOuter = readScalar(subModelDict.subDict
     (
         "injectionModels"
@@ -113,8 +121,13 @@ IOdictionary sprayCloudProperties
     (
         "injectionModels"
     ).subDict("model1").lookup("massTotal"));     
-    
-    // the parameter of the model
+
+scalar nparcel = subModelDict.subDict
+    (
+        "injectionModels"
+    ).subDict("model1").lookupOrDefault<scalar>("nParticle",30.); 
+    Info<<"nparcel ==="<<nparcel<<endl; 
+   // the parameter of the model
 
     scalar tcdinj = 0.0;  // injection duration 
     scalar coef1 = 0.28;
@@ -127,15 +140,24 @@ scalar numvel = subModelDict.subDict
     (
         "injectionModels"
     ).subDict("model1").lookupOrDefault<scalar>("numvel",100.);  
-
+	
+	
+scalar cd = subModelDict.subDict
+    (
+        "injectionModels"
+    ).subDict("model1").lookupOrDefault<scalar>("Cd",0.); 
+if (cd > 0.5 && cd < 0.99) Info<<"cd is defined by user ==="<< cd <<endl;
+ 
 m_f = m_f*1e6; // mg
 
 scalar vmax = Foam::sqrt(2*Pinj/rho_fuel);
 scalar Re = 10000./(vmax*rho_fuel*dOuter/viscosity_fuel);
-scalar cd = (0.76-0.05*Foam::log(Re))*Foam::exp(0.08*(90-umbreangle/2)/90);
+
+if (cd < 0.5 || cd > 0.99) cd = (0.76-0.05*Foam::log(Re))*Foam::exp(0.08*(90-umbreangle/2)/90);
 vmax = cd*vmax;
 scalar gmax = vmax*rho_fuel*Foam::constant::mathematical::pi*0.25*Foam::sqr(dOuter)*1e3;
 Info<<"gmax(mg/ms) ==="<<gmax<<endl; 
+Info<<"cd ==="<< cd <<endl; 
 scalar c1 = 7.*gmax;
 scalar t1 = 2.*gmax/c1/(coef2-1.0);
 scalar t2 = coef2*t1;
@@ -175,7 +197,7 @@ scalar dt=0.;
 scalar gm=0.;
 
 scalarList veltab(numvel);
-
+Info<<"gm12 ==="<< gm12 <<endl; 
 if(m_f>gm12)
 {
     scalar dertam=m_f-gm12;
@@ -269,6 +291,7 @@ else if(m_f>gm04 && m_f<=gm12)
 	}
 }
 
+
     IOobject engineGeometry
     (
         "engineGeometry",
@@ -279,6 +302,22 @@ else if(m_f>gm04 && m_f<=gm12)
         false
     );
     
+    Info<<"tcdinj ==="<< tcdinj <<"ms" <<endl; 
+    OFstream sizeDistributionMinOutPutOutPut("constant/injetionParameter/minValue"); 
+	sizeDistributionMinOutPutOutPut<< dOuter/90.0 <<";"<<endl;
+    OFstream sizeDistributionMaxOutPutOutPut("constant/injetionParameter/maxValue");
+    sizeDistributionMaxOutPutOutPut<< dOuter*0.2 <<";"<<endl;
+	OFstream sizeDistributionMeanOutPutOutPut("constant/injetionParameter/meanValue");
+    sizeDistributionMeanOutPutOutPut<< dOuter*0.18 <<";"<<endl;
+	Info<<"sizeDistributionMin ==="<< dOuter/90.0 <<endl; 
+	Info<<"sizeDistributionMax ==="<< dOuter*0.2 <<endl;
+	Info<<"sizeDistributionMean ==="<< dOuter*0.18 <<endl;
+    scalar nparcelsmass = m_f/1e6/(Foam::constant::mathematical::pi*Foam::pow(0.18*dOuter, 3)*nparcel*rho_fuel/6.0);
+	label nparcelsPerSecond = nparcelsmass/(tcdinj/1000.);
+	Info<<"nparcels per second ====" << nparcelsPerSecond <<endl;
+    nparcelsPerSecond = min(nparcelsPerSecond,5e8);
+	OFstream parcelsPerSecondOutPutOutPut("constant/injetionParameter/parcelsPerSecond");   
+    parcelsPerSecondOutPutOutPut<< nparcelsPerSecond <<";"<<endl;	
     dimensionedScalar rpm(dimensionSet(0, 0, -1, 0, 0, 0, 0),0);
     scalar duration_CA= 0;
     if (engineGeometry.typeHeaderOk<IOdictionary>(false))
@@ -315,8 +354,7 @@ forAll(timeList, i)
 }
 
 OFstream injectionOutPut("constant/injetionParameter/flowRateProfile");
-OFstream durationOutPut("constant/injetionParameter/duration");    
-
+OFstream durationOutPut("constant/injetionParameter/duration");   
 injectionOutPut<<"table"<<endl;
 injectionOutPut<<"("<<endl;
 
