@@ -1,7 +1,9 @@
 # injectionProfileGenerator
-Injection Profile was caculated by the empirical model. 
-Thanks for the help of Yan Zhang. His blog:  https://openfoam.top/
-------------Related articles----------------
+Injection Profile was caculated by the empirical model.
+
+> Thanks for the help of Yan Zhang. His blog:  https://openfoam.top/
+---
+## ------------Related articles----------------
 Xu L, Bai X S, Jia M, et al. Experimental and modeling study of liquid fuel injection and combustion in diesel engines with a common rail injection system[J]. Applied Energy, 2018, 230: 287-304.
 DOI: 10.1016/j.apenergy.2018.08.104
 https://www.sciencedirect.com/science/article/pii/S0306261918312741
@@ -12,6 +14,7 @@ Pinj	        800e+5; // injection  pressure bar
 umbreangle      120.0; // spray umbrella angel. For the constant volume vessel the umbrella is 0.0;
 
 ### A sample of the injetionModels.model1
+```C++
        model1
         {
             type            coneInjection;
@@ -34,7 +37,7 @@ umbreangle      120.0; // spray umbrella angel. For the constant volume vessel t
             Cd              #include "$FOAM_CASE/constant/injetionParameter/discd";
             thetaInner      constant 0.0;
             thetaOuter      constant 15.0;
-			
+```
 ## ------------Use this model----------------
 Run the solver in your case folder:injectionProfileGenerator
 After that a folder named "injetionParameter" will be created in the folder of "constant". 
