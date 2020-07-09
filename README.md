@@ -64,15 +64,6 @@ Run the solver in your case folder:injectionProfileGenerator
 
 After that a folder named "injetionParameter" will be created in the folder of "constant". 
 
-Four files are in this folder:
-
-"Duration":injection duration 
-
-"flowRateProfile":
-
-"velocity": parcels initial velocity 
-
-"discd": the discharge coefficient
 
 ## ------------Peport the bug----------------
 If you have any question, you can send the email to: xflyhigh@qq.com.
