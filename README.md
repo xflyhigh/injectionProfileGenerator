@@ -7,11 +7,11 @@ DOI: 10.1016/j.apenergy.2018.08.104
 https://www.sciencedirect.com/science/article/pii/S0306261918312741
 
 
-------------parameters required  in this model----------------
+## ------------parameters required  in this model----------------
 Pinj	        800e+5; // injection  pressure bar
 umbreangle      120.0; // spray umbrella angel. For the constant volume vessel the umbrella is 0.0;
 
-A sample of the injetionModels.model1
+### A sample of the injetionModels.model1
        model1
         {
             type            coneInjection;
@@ -35,7 +35,7 @@ A sample of the injetionModels.model1
             thetaInner      constant 0.0;
             thetaOuter      constant 15.0;
 			
-------------Use this model----------------
+## ------------Use this model----------------
 Run the solver in your case folder:injectionProfileGenerator
 After that a folder named "injetionParameter" will be created in the folder of "constant". 
 Four files are in this folder:
@@ -44,7 +44,7 @@ Four files are in this folder:
 "velocity": parcels initial velocity 
 "discd": the discharge coefficient
 
-------------Peport the bug----------------
+## ------------Peport the bug----------------
 If you have any question, you can send the email to: xflyhigh@qq.com.
 
 
