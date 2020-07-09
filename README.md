@@ -41,11 +41,17 @@ umbreangle      120.0; // spray umbrella angel. For the constant volume vessel t
 ```
 ## ------------Use this model----------------
 Run the solver in your case folder:injectionProfileGenerator
+
 After that a folder named "injetionParameter" will be created in the folder of "constant". 
+
 Four files are in this folder:
+
 "Duration":injection duration 
+
 "flowRateProfile":
+
 "velocity": parcels initial velocity 
+
 "discd": the discharge coefficient
 
 ## ------------Peport the bug----------------
