@@ -2,6 +2,7 @@
 Injection Profile was caculated by the empirical model.
 
 > Thanks for the help of Yan Zhang. His blog:  https://openfoam.top/
+
 > Thanks for the help of Shijie Xu. His blog:  https://openfoam.tech/
 
 ---
