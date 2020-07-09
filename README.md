@@ -20,7 +20,7 @@ A sample of the injetionModels.model1
             parcelBasisType mass;
 	        nParticle	    1;
             injectionMethod disc;
-            flowType        constantVelocity;
+            flowType        constantVelocity;///
 			Umag            #include "$FOAM_CASE/constant/injetionParameter/velocity";
             Pinj	        800e+5;
             dOuter   230e-6;
